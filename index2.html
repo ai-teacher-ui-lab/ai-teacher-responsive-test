@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Teacher - Hardcore Ultimate</title>
+<style>
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+/* ─── RESET & BASE ─────────────────────────────────────── */
+html,body{
+margin:0;
+padding:0;
+font-family:Arial,sans-serif;
+background:#000;
+color:white;
+height:100%;
+overflow:hidden;
+}
+
+/* ─── LOGIN ─────────────────────────────────────────────── */
+#login{
+display:flex;
+flex-direction:column;
+justify-content:flex-end;
+align-items:center;
+height:100dvh;
+gap:14px;
+background:#000;
+padding:20px;
+padding-bottom:100px;
+overflow:hidden;
+}
+#login h2,#loginTitle{
+font-size:32px;font-weight:800;color:white;
+margin:0 0 16px 0;text-align:center;
+}
+#login input{
+width:100%;max-width:380px;
+padding:18px 20px;border:none;border-radius:16px;
+font-size:17px;background:white;color:#000;outline:none;
+}
+#login button{
+width:100%;max-width:380px;height:58px;
+font-size:18px;font-weight:700;border-radius:16px;
+border:none;cursor:pointer;color:white;
+}
+#loginBtn{background:#2563eb;}
+#signupBtn{background:#22c55e;}
+
+/* ─── PLAN SCREEN ────────────────────────────────────────── */
+#planScreen{
+display:none;flex-direction:column;align-items:center;
+justify-content:center;height:100dvh;background:#000;
+gap:44px;overflow:hidden;
+}
+#planScreen h2{
+font-size:30px;font-weight:800;color:white;
+margin:0;text-align:center;
+}
+#planBtns{
+display:flex;gap:18px;align-items:center;justify-content:center;
+}
+#planBtns button,.planBtn{
+padding:18px 32px;border-radius:16px;font-size:17px;
+font-weight:700;border:none;cursor:pointer;min-width:130px;color:white;
+}
+#freeBtn,.planFreeBtn{background:#2563eb;}
+#premiumBtn,.planPremiumBtn{background:#f59e0b;}
+
+/* ─── LEVEL GATE ─────────────────────────────────────────── */
+#levelGate{
+display:none;flex-direction:column;align-items:center;
+justify-content:center;height:100dvh;gap:10px;
+background:#000;overflow:hidden;
+}
+#levelCard{
+background:#0f172a;padding:28px 20px;border-radius:20px;
+display:flex;flex-direction:column;gap:12px;
+width:88%;max-width:420px;
+}
+#levelCard .levelTitle{
+font-size:26px;font-weight:800;color:white;margin:0 0 6px 0;
+}
+#levelCard button{
+padding:18px;border:none;border-radius:14px;cursor:pointer;
+background:#2563eb;color:white;font-size:17px;font-weight:700;
+width:100%;text-align:center;
+}
+#levelCard button:hover{background:#1d4ed8;}
+
+/* ─── SCREEN UTILITY ─────────────────────────────────────── */
+.screen{display:none;}
+.modeHidden{display:none!important;}
+.locked{opacity:.5;pointer-events:none;}
+
+/* ─── APP SHELL ──────────────────────────────────────────── */
+#app{
+display:none;
+flex-direction:column;
+height:100dvh;
+overflow:hidden;
+}
+
+/* ─── TOP HEADER ─────────────────────────────────────────── */
+#topHeader{
+flex-shrink:0;
+padding:8px 12px 6px 12px;
+background:#071224;
+border-bottom:1px solid rgba(255,255,255,.06);
+display:flex;
+flex-direction:column;
+gap:6px;
+}
+#profileRow{
+display:flex;align-items:center;gap:10px;
+}
+#profileAvatar{
+width:56px;height:56px;
+border-radius:50%;object-fit:cover;
+box-shadow:0 0 18px rgba(59,130,246,.5);
+flex-shrink:0;
+}
+#profileInfo{flex:1;display:flex;flex-direction:column;justify-content:center;}
+#playerName{font-size:18px;font-weight:800;margin-bottom:4px;}
+#statsRow{
+display:grid;grid-template-columns:repeat(3,1fr);
+gap:2px 8px;font-size:12px;font-weight:700;
+}
+.topStat{font-weight:700;color:white;white-space:nowrap;}
+
+/* ─── MODE BAR ───────────────────────────────────────────── */
+#modeBar{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:6px;
+width:100%;
+padding:0;
+margin-top:2px;
+}
+#modeBar button{
+height:36px;
+border:none;
+border-radius:10px;
+background:#22c55e;
+color:white;
+font-size:13px;
+font-weight:700;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:0;
+cursor:pointer;
+user-select:none;
+-webkit-tap-highlight-color:transparent;
+}
+.modeActive{
+background:#16a34a!important;
+box-shadow:inset 0 2px 6px rgba(0,0,0,.35)!important;
+}
+
+/* ─── MAIN CONTAINER ─────────────────────────────────────── */
+.container{
+flex:1;
+min-height:0;
+display:flex;
+overflow:hidden;
+}
+
+/* ─── CHAT PANEL ─────────────────────────────────────────── */
+#chat{
+display:flex;
+flex-direction:column;
+background:#050505;
+min-width:0;
+overflow:hidden;
+position:relative;
+}
+#messages{
+flex:1;
+overflow-y:auto;
+padding:14px;
+padding-bottom:10px;
+scroll-behavior:smooth;
+min-height:0;
+}
+.msg{
+margin-bottom:10px;padding:10px;border-radius:12px;
+max-width:80%;word-wrap:break-word;line-height:1.4;
+}
+.user{background:#2563eb;margin-left:auto;}
+.ai{background:#1f2937;}
+.system{background:#065f46;}
+
+#inputArea{
+flex-shrink:0;
+display:flex;
+align-items:center;
+gap:8px;
+padding:10px;
+background:#111;
+border-top:1px solid #222;
+}
+#input{
+flex:1;
+padding:12px 14px;
+border:none;
+border-radius:12px;
+background:white;
+color:black;
+font-size:16px;
+outline:none;
+height:46px;
+}
+button{
+border:none;background:#2563eb;color:white;
+padding:12px;border-radius:12px;cursor:pointer;font-weight:bold;
+}
+button:hover{opacity:.9;}
+#sendBtn{
+height:46px;min-width:52px;
+font-size:18px;
+flex-shrink:0;
+}
+
+/* ─── RIGHT PANEL ────────────────────────────────────────── */
+#right{
+flex:1;
+min-width:0;
+background:#000;
+display:flex;
+flex-direction:column;
+overflow:hidden;
+border-left:1px solid #111;
+}
+#modeScreen{
+flex:1;
+display:flex;
+flex-direction:column;
+overflow:hidden;
+min-height:0;
+}
+
+/* ─── AVATAR ─────────────────────────────────────────────── */
+#avatarWrap{
+flex-shrink:0;
+display:flex;
+justify-content:center;
+background:#000;
+}
+#avatar{
+display:flex;
+align-items:flex-end;
+justify-content:center;
+background:linear-gradient(to bottom,#111,#000);
+position:relative;
+overflow:hidden;
+border-bottom:1px solid #111;
+width:100%;
+}
+#avatar img{
+object-fit:contain;
+filter:drop-shadow(0 0 25px rgba(255,255,255,.15));
+transition:transform 0.2s ease,filter 0.2s ease;
+}
+#avatarGlow{
+position:absolute;inset:0;
+background:radial-gradient(circle,rgba(59,130,246,.18),transparent 70%);
+animation:pulse 2s infinite;
+pointer-events:none;
+}
+@keyframes pulse{
+0%{opacity:.4;}50%{opacity:1;}100%{opacity:.4;}
+}
+#avatar.talking img{
+transform:scale(1.05);
+filter:brightness(1.18) drop-shadow(0 0 30px rgba(59,130,246,.6));
+}
+#avatarText{
+position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+background:rgba(0,0,0,.5);padding:4px 12px;border-radius:999px;
+font-size:11px;color:#93c5fd;backdrop-filter:blur(6px);
+white-space:nowrap;
+}
+
+/* ─── PANEL (quiz area) ──────────────────────────────────── */
+.panel{
+flex:1;
+min-height:0;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
+padding:12px 14px;
+background:#fff;
+color:#000;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+.panelTitle{
+font-weight:bold;font-size:15px;flex-shrink:0;
+}
+.qbox{
+background:#fff;
+border-radius:16px;
+border:2px solid #ddd;
+padding:14px;
+display:flex;
+flex-direction:column;
+gap:10px;
+flex-shrink:0;
+}
+
+/* ─── QUESTION TEXT ──────────────────────────────────────── */
+#question{
+font-weight:800;
+line-height:1.3;
+margin:0;
+word-break:break-word;
+}
+
+/* ─── OPTIONS ────────────────────────────────────────────── */
+#options{
+display:grid;
+gap:8px;
+}
+.option{
+min-height:48px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:10px 14px;
+font-weight:700;
+color:#000;
+background:#facc15;
+box-shadow:0 3px 8px rgba(0,0,0,.12);
+cursor:pointer;
+transition:all .15s ease;
+word-break:break-word;
+line-height:1.3;
+}
+.option:active{transform:scale(0.97);}
+.option:hover{transform:scale(1.02);background:#fde047;}
+.correct{background:#065f46!important;color:white!important;}
+.wrong{background:#991b1b!important;color:white!important;}
+
+/* ─── MATCH MODE options ─────────────────────────────────── */
+.matchMode #options{
+grid-template-columns:1fr 1fr;
+gap:8px;
+}
+.matchMode .option{
+min-height:46px;
+font-size:14px;
+padding:8px 10px;
+border-radius:12px;
+}
+
+/* ─── PROGRESS BAR ───────────────────────────────────────── */
+.progress{
+height:10px;background:#111827;
+border-radius:999px;overflow:hidden;margin-top:4px;
+}
+.bar{height:100%;width:0%;background:#22c55e;}
+
+/* ─── LEADERBOARD ────────────────────────────────────────── */
+#leaderboard div{
+padding:6px;background:#111827;
+margin-bottom:6px;border-radius:8px;font-size:13px;
+}
+#streak{color:#facc15;font-weight:bold;}
+
+/* ─── CHAT MODE FULL ─────────────────────────────────────── */
+#chatModeFull{
+display:none;flex:1;flex-direction:column;
+}
+
+/* ══════════════════════════════════════════════════════════
+   DESKTOP  ≥ 901px
+══════════════════════════════════════════════════════════ */
+@media(min-width:901px){
+
+#app{height:100dvh;}
+
+#topHeader{
+padding:10px 20px 8px 20px;
+}
+#profileAvatar{width:72px;height:72px;}
+#playerName{font-size:22px;}
+#statsRow{
+grid-template-columns:repeat(3,1fr);
+gap:4px 20px;font-size:14px;
+}
+#modeBar button{height:40px;font-size:14px;}
+
+.container{
+flex-direction:row;
+height:calc(100dvh - 130px); /* header yüksekliğine göre otomatik */
+}
+
+/* Chat: sabit 400px */
+#chat{
+flex:0 0 400px;
+width:400px;
+min-width:400px;
+max-width:400px;
+display:flex!important;
+border-right:1px solid #111;
+}
+#messages{padding:16px;padding-bottom:10px;}
+#inputArea{padding:12px;}
+#input{height:46px;}
+#sendBtn{width:52px;height:46px;}
+
+/* Right */
+#right{
+flex:1;
+min-width:0;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+#modeScreen{
+width:100%;
+max-width:860px;
+align-self:center;
+}
+
+/* Avatar desktop */
+#avatar{
+height:220px;
+min-height:220px;
+}
+#avatar img{width:170px;}
+
+/* Panel desktop */
+.panel{
+padding:24px 28px;
+background:#fff;
+border-radius:0;
+}
+.qbox{
+max-width:700px;
+width:100%;
+align-self:center;
+padding:24px 28px;
+border-radius:24px;
+}
+
+/* Question font desktop */
+#question{font-size:32px;}
+
+/* Options desktop — her zaman tek sütun vocab/grammar,
+   match 2 sütun zaten matchMode ile hallolur */
+#options{
+grid-template-columns:1fr;
+gap:10px;
+max-width:700px;
+width:100%;
+align-self:center;
+}
+.option{
+min-height:54px;
+font-size:17px;
+padding:12px 18px;
+border-radius:14px;
+}
+
+/* Match desktop */
+.matchMode #options{
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+.matchMode .option{
+min-height:52px;
+font-size:15px;
+}
+}
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE  ≤ 900px
+══════════════════════════════════════════════════════════ */
+@media(max-width:900px){
+
+body{overflow:hidden;height:100dvh;}
+
+.container{
+flex-direction:column;
+height:calc(100dvh - 120px); /* topHeader yüksekliği otomatik */
+}
+
+/* Chat mobile: gizli, sadece Chat modunda gösterilir */
+#chat{
+display:none;
+flex-direction:column;
+position:absolute;inset:0;
+z-index:100;
+background:#050505;
+}
+#inputArea{
+position:static; /* absolute pozisyon sorun yaratıyor, flex ile çöz */
+flex-shrink:0;
+}
+
+/* Right full width */
+#right{
+width:100%;flex:1;min-height:0;
+display:flex;flex-direction:column;
+overflow:hidden;
+}
+
+/* Avatar mobile: küçük sabit */
+#avatar{
+height:130px;min-height:130px;flex-shrink:0;
+}
+#avatar img{width:110px;}
+
+/* Panel mobile */
+.panel{
+flex:1;min-height:0;
+padding:10px 10px 10px 10px;
+}
+.qbox{
+padding:12px;border-radius:14px;
+border:1.5px solid #ddd;
+}
+
+/* Question mobile */
+#question{font-size:19px;}
+
+/* Options mobile — tek sütun */
+#options{
+grid-template-columns:1fr;
+gap:7px;
+}
+.option{
+min-height:46px;
+font-size:15px;
+padding:10px 12px;
+border-radius:12px;
+}
+
+/* Match mobile — 2 sütun */
+.matchMode #options{
+grid-template-columns:1fr 1fr;
+gap:6px;
+}
+.matchMode .option{
+min-height:44px;
+font-size:13px;
+padding:8px 8px;
+}
+
+/* Stats küçük ekran */
+#statsRow{
+grid-template-columns:repeat(3,1fr);
+font-size:11px;gap:2px 6px;
+}
+#playerName{font-size:16px;}
+#profileAvatar{width:50px;height:50px;}
+}
+
+/* ══════════════════════════════════════════════════════════
+   KÜÇÜK TELEFON  ≤ 390px
+══════════════════════════════════════════════════════════ */
+@media(max-width:390px){
+#modeBar button{font-size:11px;height:32px;}
+#question{font-size:17px;}
+.option{font-size:13px;min-height:42px;}
+.matchMode .option{font-size:12px;min-height:40px;}
+#profileAvatar{width:44px;height:44px;}
+#playerName{font-size:14px;}
+#statsRow{font-size:10px;}
+}
+</style>
+</head>
+<body>
+  
+  <div id="login" class="screen">
+    <h2>Login</h2>
+    <input id="email" placeholder="Email" type="email" />
+    <input id="password" type="password" placeholder="Password" />
+    <button onclick="doLogin()">Login</button>
+    <button onclick="doSignUp()" style="background:#22c55e;">Sign Up</button>
+  </div>
+
+  <div id="planScreen" class="screen">
+    <h2>Select Your Plan</h2>
+    <div id="planSelect" style="display:flex; gap:12px; justify-content:center; align-items:center; margin:20px 0;">
+      <button id="freeBtn">Free User</button>
+      <button id="premiumBtn" style="background:#f59e0b;">Premium</button>
+    </div>
+  </div>
+
+ <div id="levelGate" class="screen">
+  <div id="levelCard">
+    <h2>Select Level</h2>
+
+    <button data-level="A1" onclick="chooseLevel('A1')">
+      A1 (Free)
+    </button>
+
+    <button data-level="A2" onclick="chooseLevel('A2')">
+      A2
+    </button>
+
+    <button data-level="B1" onclick="chooseLevel('B1')">
+      B1
+    </button>
+
+    <button data-level="B2" onclick="chooseLevel('B2')">
+      B2
+    </button>
+
+    <button data-level="C1" onclick="chooseLevel('C1')">
+      C1
+    </button>
+
+  </div>
+</div>
+
+  <div id="app">
+    <header id="topHeader">
+      <div id="profileRow">
+        <img src="./robot.png" id="profileAvatar" alt="Avatar">
+        <div id="profileInfo">
+          <div id="playerName">Gökhan</div>
+          <div id="statsRow">
+            <div class="topStat">⭐ XP: <span id="xp">0</span></div>
+            <div class="topStat">💎 Credit: <span id="credits">50</span></div>
+            <div class="topStat">🔥 Streak: <span id="streak">0</span></div>
+            <div class="topStat">🎯 Score: <span id="score">0</span></div>
+            <div class="topStat">✔ Correct: <span id="correct">0</span></div>
+            <div class="topStat">❌ Wrong: <span id="wrong">0</span></div>
+          </div>
+        </div>
+      </div>
+      <div id="modeBar">
+        <button onclick="setMode('vocabulary')">Vocabulary</button>
+        <button onclick="setMode('grammar')">Grammar</button>
+        <button onclick="setMode('match')">Match</button>
+        <button onclick="setMode('chat')">Chat</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <div id="chat">
+        <div id="messages"></div>
+        <div id="inputArea">
+          <input id="input" placeholder="Write your sentence or word for correction..." />
+          <button id="sendBtn" class="neon-send-btn">➤</button>
+        </div>
+      </div>
+
+      <div id="right">
+        <div id="modeScreen">
+          <div id="avatarWrap">
+            <div id="avatar">
+              <img id="avatarImg" src="./robot.png" alt="AI Robot" />
+              <div id="avatarGlow"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panelTitle" id="panelTitle">Grammar Challenge</div>
+            <div class="qbox">
+              <div id="question">Loading...</div>
+              <div id="options"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const vocabularyQuestions = [
+{
+question:"Apple ne demek?",
+options:["Armut","Elma","Muz","Çilek"],
+answer:"Elma"
+}
+];
+
+const grammarQuestions = [
+{
+question:"She ___ to school every day.",
+options:["go","goes","going","gone"],
+answer:"goes"
+}
+];
+
+const matchData = [
+{ en:"philosophy", tr:"felsefe" },
+{ en:"methodology", tr:"yöntem bilimi" },
+{ en:"phenomenon", tr:"fenomen" },
+{ en:"perspective", tr:"bakış açısı" },
+{ en:"hypothesis", tr:"hipotez" }
+];
+
+let currentMode = "vocabulary";
+
+const panelTitle = document.getElementById("panelTitle");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+
+function setMode(mode){
+
+currentMode = mode;
+
+document.querySelectorAll("#modeBar button")
+.forEach(btn=>btn.classList.remove("modeActive"));
+
+if(mode==="vocabulary"){
+document.querySelectorAll("#modeBar button")[0]
+.classList.add("modeActive");
+renderVocabulary();
+}
+
+if(mode==="grammar"){
+document.querySelectorAll("#modeBar button")[1]
+.classList.add("modeActive");
+renderGrammar();
+}
+
+if(mode==="match"){
+document.querySelectorAll("#modeBar button")[2]
+.classList.add("modeActive");
+renderMatch();
+}
+
+if(mode==="chat"){
+
+document.querySelectorAll("#modeBar button")[3]
+.classList.add("modeActive");
+
+document.getElementById("avatarWrap").style.display="none";
+
+document.querySelector(".panel").style.display="none";
+
+document.getElementById("chat").style.display="flex";
+
+document.getElementById("chat").style.flex="1";
+
+document.getElementById("messages").innerHTML=`
+<div class="msg ai">
+Hello Gökhan 👋<br>
+Welcome to AI Teacher Chat Mode.
+</div>
+`;
+
+return;
+}
+}
+
+function renderVocabulary(){
+
+document.getElementById("avatarWrap").style.display="flex";
+
+document.querySelector(".panel").style.display="block";
+
+document.getElementById("chat").style.display="none";
+
+const q = vocabularyQuestions[0];
+
+panelTitle.innerText = "Vocabulary Challenge";
+
+questionEl.innerHTML = q.question;
+
+optionsEl.innerHTML = "";
+
+optionsEl.style.display = "grid";
+optionsEl.style.gridTemplateColumns = "1fr";
+optionsEl.style.gap = "10px";
+
+q.options.forEach(option=>{
+
+const div = document.createElement("div");
+
+div.className = "option";
+
+div.innerText = option;
+
+div.onclick = ()=>{
+
+document.querySelectorAll(".option")
+.forEach(el=>el.style.pointerEvents="none");
+
+if(option===q.answer){
+
+div.classList.add("correct");
+
+}else{
+
+div.classList.add("wrong");
+
+}
+};
+
+optionsEl.appendChild(div);
+
+});
+}
+
+function renderGrammar(){
+
+document.getElementById("avatarWrap").style.display="flex";
+
+document.querySelector(".panel").style.display="block";
+
+document.getElementById("chat").style.display="none";
+
+const q = grammarQuestions[0];
+
+panelTitle.innerText = "Grammar Challenge";
+
+questionEl.innerHTML = q.question;
+
+optionsEl.innerHTML = "";
+
+optionsEl.style.display = "grid";
+optionsEl.style.gridTemplateColumns = "1fr";
+optionsEl.style.gap = "10px";
+
+q.options.forEach(option=>{
+
+const div = document.createElement("div");
+
+div.className = "option";
+
+div.innerText = option;
+
+div.onclick = ()=>{
+
+document.querySelectorAll(".option")
+.forEach(el=>el.style.pointerEvents="none");
+
+if(option===q.answer){
+
+div.classList.add("correct");
+
+}else{
+
+div.classList.add("wrong");
+
+}
+};
+
+optionsEl.appendChild(div);
+
+});
+}
+
+let selectedEnglish = null;
+
+function renderMatch(){
+
+document.getElementById("avatarWrap").style.display="flex";
+
+document.querySelector(".panel").style.display="block";
+
+document.getElementById("chat").style.display="none";
+
+panelTitle.innerText = "Match Challenge";
+
+questionEl.innerHTML = "";
+
+optionsEl.innerHTML = "";
+
+optionsEl.style.display = "grid";
+
+optionsEl.style.gridTemplateColumns = "1fr 1fr";
+
+optionsEl.style.gap = "14px";
+
+const englishWords = [...matchData];
+
+const turkishWords = [...matchData]
+.sort(()=>Math.random()-0.5);
+
+englishWords.forEach(item=>{
+
+const div = document.createElement("div");
+
+div.className = "option";
+
+div.innerText = item.en;
+
+div.dataset.type = "en";
+
+div.dataset.value = item.tr;
+
+div.onclick = ()=>selectEnglish(div);
+
+optionsEl.appendChild(div);
+
+});
+
+turkishWords.forEach(item=>{
+
+const div = document.createElement("div");
+
+div.className = "option";
+
+div.innerText = item.tr;
+
+div.dataset.type = "tr";
+
+div.dataset.value = item.tr;
+
+div.onclick = ()=>selectTurkish(div);
+
+optionsEl.appendChild(div);
+
+});
+}
+
+function selectEnglish(el){
+
+document.querySelectorAll('[data-type="en"]')
+.forEach(e=>e.style.outline="none");
+
+selectedEnglish = el;
+
+el.style.outline = "4px solid #3b82f6";
+}
+
+function selectTurkish(el){
+
+if(!selectedEnglish) return;
+
+if(selectedEnglish.dataset.value === el.dataset.value){
+
+selectedEnglish.classList.add("correct");
+
+el.classList.add("correct");
+
+selectedEnglish.style.pointerEvents="none";
+
+el.style.pointerEvents="none";
+
+}else{
+
+selectedEnglish.classList.add("wrong");
+
+el.classList.add("wrong");
+
+setTimeout(()=>{
+
+selectedEnglish.classList.remove("wrong");
+
+el.classList.remove("wrong");
+
+},700);
+}
+
+selectedEnglish.style.outline="none";
+
+selectedEnglish = null;
+}
+
+document.getElementById("login").style.display="none";
+
+document.getElementById("planScreen").style.display="none";
+
+document.getElementById("levelGate").style.display="none";
+
+document.getElementById("app").style.display="flex";
+
+setMode("vocabulary");
+</script>
+</body>
+</html>
