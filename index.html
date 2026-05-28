@@ -1022,11 +1022,11 @@ answer:"goes"
 ];
 
 const matchData = [
-{ en:"Apple", tr:"Elma" },
-{ en:"Book", tr:"Kitap" },
-{ en:"Water", tr:"Su" },
-{ en:"House", tr:"Ev" },
-{ en:"Car", tr:"Araba" }
+{ en:"philosophy", tr:"felsefe" },
+{ en:"methodology", tr:"yöntem bilimi" },
+{ en:"phenomenon", tr:"fenomen" },
+{ en:"perspective", tr:"bakış açısı" },
+{ en:"hypothesis", tr:"hipotez" }
 ];
 
 let currentMode = "vocabulary";
@@ -1087,7 +1087,9 @@ return;
 function renderVocabulary(){
 
 document.getElementById("avatarWrap").style.display="flex";
+
 document.querySelector(".panel").style.display="block";
+
 document.getElementById("chat").style.display="none";
 
 const q = vocabularyQuestions[0];
@@ -1098,7 +1100,7 @@ questionEl.innerHTML = q.question;
 
 optionsEl.innerHTML = "";
 
-optionsEl.classList.remove("matchMode");
+optionsEl.className = "";
 
 q.options.forEach(option=>{
 
@@ -1114,9 +1116,13 @@ document.querySelectorAll(".option")
 .forEach(el=>el.style.pointerEvents="none");
 
 if(option===q.answer){
+
 div.classList.add("correct");
+
 }else{
+
 div.classList.add("wrong");
+
 }
 };
 
@@ -1128,7 +1134,9 @@ optionsEl.appendChild(div);
 function renderGrammar(){
 
 document.getElementById("avatarWrap").style.display="flex";
+
 document.querySelector(".panel").style.display="block";
+
 document.getElementById("chat").style.display="none";
 
 const q = grammarQuestions[0];
@@ -1139,7 +1147,7 @@ questionEl.innerHTML = q.question;
 
 optionsEl.innerHTML = "";
 
-optionsEl.classList.remove("matchMode");
+optionsEl.className = "";
 
 q.options.forEach(option=>{
 
@@ -1155,9 +1163,13 @@ document.querySelectorAll(".option")
 .forEach(el=>el.style.pointerEvents="none");
 
 if(option===q.answer){
+
 div.classList.add("correct");
+
 }else{
+
 div.classList.add("wrong");
+
 }
 };
 
@@ -1171,21 +1183,35 @@ let selectedEnglish = null;
 function renderMatch(){
 
 document.getElementById("avatarWrap").style.display="flex";
+
 document.querySelector(".panel").style.display="block";
+
 document.getElementById("chat").style.display="none";
 
 panelTitle.innerText = "Match Challenge";
 
-questionEl.innerHTML = "Match English words with Turkish meanings";
+questionEl.innerHTML = "";
 
 optionsEl.innerHTML = "";
 
-optionsEl.classList.add("matchMode");
+optionsEl.className = "matchMode";
 
 const englishWords = [...matchData];
 
 const turkishWords = [...matchData]
 .sort(()=>Math.random()-0.5);
+
+const leftColumn = document.createElement("div");
+
+leftColumn.style.display = "flex";
+leftColumn.style.flexDirection = "column";
+leftColumn.style.gap = "14px";
+
+const rightColumn = document.createElement("div");
+
+rightColumn.style.display = "flex";
+rightColumn.style.flexDirection = "column";
+rightColumn.style.gap = "14px";
 
 englishWords.forEach(item=>{
 
@@ -1201,7 +1227,7 @@ div.dataset.value = item.tr;
 
 div.onclick = ()=>selectEnglish(div);
 
-optionsEl.appendChild(div);
+leftColumn.appendChild(div);
 
 });
 
@@ -1219,9 +1245,14 @@ div.dataset.value = item.tr;
 
 div.onclick = ()=>selectTurkish(div);
 
-optionsEl.appendChild(div);
+rightColumn.appendChild(div);
 
 });
+
+optionsEl.appendChild(leftColumn);
+
+optionsEl.appendChild(rightColumn);
+
 }
 
 function selectEnglish(el){
@@ -1269,7 +1300,9 @@ selectedEnglish = null;
 }
 
 document.getElementById("login").style.display="none";
+
 document.getElementById("planScreen").style.display="none";
+
 document.getElementById("levelGate").style.display="none";
 
 document.getElementById("app").style.display="flex";
