@@ -1100,7 +1100,9 @@ questionEl.innerHTML = q.question;
 
 optionsEl.innerHTML = "";
 
-optionsEl.className = "";
+optionsEl.style.display = "grid";
+optionsEl.style.gridTemplateColumns = "1fr";
+optionsEl.style.gap = "10px";
 
 q.options.forEach(option=>{
 
@@ -1147,7 +1149,9 @@ questionEl.innerHTML = q.question;
 
 optionsEl.innerHTML = "";
 
-optionsEl.className = "";
+optionsEl.style.display = "grid";
+optionsEl.style.gridTemplateColumns = "1fr";
+optionsEl.style.gap = "10px";
 
 q.options.forEach(option=>{
 
@@ -1194,24 +1198,16 @@ questionEl.innerHTML = "";
 
 optionsEl.innerHTML = "";
 
-optionsEl.className = "matchMode";
+optionsEl.style.display = "grid";
+
+optionsEl.style.gridTemplateColumns = "1fr 1fr";
+
+optionsEl.style.gap = "14px";
 
 const englishWords = [...matchData];
 
 const turkishWords = [...matchData]
 .sort(()=>Math.random()-0.5);
-
-const leftColumn = document.createElement("div");
-
-leftColumn.style.display = "flex";
-leftColumn.style.flexDirection = "column";
-leftColumn.style.gap = "14px";
-
-const rightColumn = document.createElement("div");
-
-rightColumn.style.display = "flex";
-rightColumn.style.flexDirection = "column";
-rightColumn.style.gap = "14px";
 
 englishWords.forEach(item=>{
 
@@ -1227,7 +1223,7 @@ div.dataset.value = item.tr;
 
 div.onclick = ()=>selectEnglish(div);
 
-leftColumn.appendChild(div);
+optionsEl.appendChild(div);
 
 });
 
@@ -1245,14 +1241,9 @@ div.dataset.value = item.tr;
 
 div.onclick = ()=>selectTurkish(div);
 
-rightColumn.appendChild(div);
+optionsEl.appendChild(div);
 
 });
-
-optionsEl.appendChild(leftColumn);
-
-optionsEl.appendChild(rightColumn);
-
 }
 
 function selectEnglish(el){
@@ -1311,3 +1302,4 @@ setMode("vocabulary");
 </script>
 </body>
 </html>
+
