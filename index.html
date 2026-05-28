@@ -1004,7 +1004,7 @@ background:#f59e0b;
     </div>
   </div>
 
-  <script>
+<script>
 const vocabularyQuestions = [
 {
 question:"Apple ne demek?",
@@ -1061,16 +1061,34 @@ renderMatch();
 }
 
 if(mode==="chat"){
+
 document.querySelectorAll("#modeBar button")[3]
 .classList.add("modeActive");
 
-panelTitle.innerText="Chat Mode";
-questionEl.innerHTML="Chat screen active.";
-optionsEl.innerHTML="";
+document.getElementById("avatarWrap").style.display="none";
+
+document.querySelector(".panel").style.display="none";
+
+document.getElementById("chat").style.display="flex";
+
+document.getElementById("chat").style.flex="1";
+
+document.getElementById("messages").innerHTML=`
+<div class="msg ai">
+Hello Gökhan 👋<br>
+Welcome to AI Teacher Chat Mode.
+</div>
+`;
+
+return;
 }
 }
 
 function renderVocabulary(){
+
+document.getElementById("avatarWrap").style.display="flex";
+document.querySelector(".panel").style.display="block";
+document.getElementById("chat").style.display="none";
 
 const q = vocabularyQuestions[0];
 
@@ -1108,6 +1126,10 @@ optionsEl.appendChild(div);
 }
 
 function renderGrammar(){
+
+document.getElementById("avatarWrap").style.display="flex";
+document.querySelector(".panel").style.display="block";
+document.getElementById("chat").style.display="none";
 
 const q = grammarQuestions[0];
 
@@ -1147,6 +1169,10 @@ optionsEl.appendChild(div);
 let selectedEnglish = null;
 
 function renderMatch(){
+
+document.getElementById("avatarWrap").style.display="flex";
+document.querySelector(".panel").style.display="block";
+document.getElementById("chat").style.display="none";
 
 panelTitle.innerText = "Match Challenge";
 
